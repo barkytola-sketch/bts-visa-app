@@ -1,138 +1,100 @@
-<!DOCTYPE html>
-<html lang="am">
+<!doctype html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BTS Embassy Visa AI Assistant</title>
-    <!-- Tailwind CSS for styling -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Telegram Web App SDK -->
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>BTS Visa News</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    :root{font-family:Arial,sans-serif;color:#172033;background:#f4f6fa}
+    *{box-sizing:border-box}body{margin:0}.top{background:#102b55;color:white;padding:22px 18px 18px}
+    .top h1{margin:0 0 6px;font-size:23px}.top p{margin:0;color:#d7e4f8;font-size:13px}
+    main{max-width:760px;margin:auto;padding:15px}.bar{display:flex;gap:8px;margin:12px 0}
+    input,select,textarea,button{font:inherit;border-radius:10px;padding:12px;border:1px solid #d6dce7}
+    input{min-width:0;flex:1}button{background:#1557a6;color:white;border:0;font-weight:700}
+    .tabs{display:flex;gap:7px;overflow:auto;padding:4px 0 12px}.tabs button{white-space:nowrap;background:#e3eaf5;color:#17365f}
+    .tabs button.active{background:#1557a6;color:white}.card{background:white;border:1px solid #e5e9f0;border-radius:14px;padding:15px;margin:10px 0}
+    .meta{font-size:12px;color:#667085}.card h3{margin:8px 0;font-size:17px}.card p{color:#475467;line-height:1.45}
+    .tag{font-size:11px;background:#edf3fb;color:#244a7c;padding:5px 8px;border-radius:20px}
+    .wide{width:100%;margin-top:8px}.secondary{background:#e8eef7;color:#16365f}.hidden{display:none}
+    #answer{white-space:pre-wrap;line-height:1.5}.notice{font-size:12px;color:#667085;line-height:1.5}
+    footer{text-align:center;padding:25px;color:#667085;font-size:12px}
+  </style>
 </head>
-<body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100 flex flex-col h-screen font-sans">
-
-    <!-- Header -->
-    <header class="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
-        <h1 class="font-bold text-base flex items-center gap-2">
-            ✈️ BTS Embassy Visa AI
-        </h1>
-        <span id="user-greeting" class="text-xs opacity-70">ሰላም!</span>
-    </header>
-
-    <!-- Chat Box Container -->
-    <div id="chat-container" class="flex-1 overflow-y-auto p-4 space-y-3 flex flex-col">
-        <!-- Welcome Message from AI -->
-        <div class="self-start bg-slate-200 dark:bg-slate-800 p-3 rounded-2xl max-w-[85%] text-sm">
-            ሰላም! ስለ ቪዛ፣ የጉዞ መረጃ፣ በረራዎች ወይም ሆቴሎች የሚፈልጉትን ማንኛውንም ጥያቄ በአማርኛ መጠየቅ ይችላሉ።
-        </div>
-    </div>
-
-    <!-- Input Form Area -->
-    <div class="p-3 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-        <form id="chat-form" class="flex gap-2">
-            <input 
-                type="text" 
-                id="user-input" 
-                placeholder="ጥያቄዎን እዚህ ይጻፉ..." 
-                class="flex-1 bg-slate-100 dark:bg-slate-800 border-none rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
-            >
-            <button 
-                type="submit" 
-                class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition"
-            >
-                ላክ
-            </button>
-        </form>
-    </div>
-
-    <!-- JavaScript Logic & Gemini API Connection -->
-    <script>
-        // Initialize Telegram Web App
-        const tg = window.Telegram.WebApp;
-        tg.expand();
-
-        if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-            document.getElementById('user-greeting').innerText = `ሰላም፣ ${tg.initDataUnsafe.user.first_name}`;
-        }
-
-        const chatContainer = document.getElementById('chat-container');
-        const chatForm = document.getElementById('chat-form');
-        const userInput = document.getElementById('user-input');
-
-        // ---- YOUR GEMINI API CONFIGURATION ----
-        const GEMINI_API_KEY = 'AQ.Ab8RN6LlPPFN56pHu61s2KjHksTZuLht4pL5JtvShEz4f36DsQ';
-        
-        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
-
-        chatForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const text = userInput.value.trim();
-            if (!text) return;
-
-            // 1. Show User Message
-            appendMessage(text, 'user');
-            userInput.value = '';
-
-            // 2. Show Loading Indicator
-            const loadingId = appendMessage('እየፈለግሁ ነው...', 'ai', true);
-
-            try {
-                // Call Gemini API
-                const botReply = await getGeminiResponse(text);
-                
-                document.getElementById(loadingId).remove();
-                appendMessage(botReply, 'ai');
-            } catch (error) {
-                document.getElementById(loadingId).remove();
-                appendMessage('ይቅርታ፣ ከግንኙነት ጋር የተያያዘ ችግር አጋጥሟል። እባክዎ ትንሽ ቆይተው እንደገና ይሞክሩ።', 'ai');
-                console.error(error);
-            }
-        });
-
-        function appendMessage(text, sender, isLoading = false) {
-            const messageDiv = document.createElement('div');
-            const id = 'msg-' + Date.now();
-            messageDiv.id = id;
-            
-            if (sender === 'user') {
-                messageDiv.className = 'self-end bg-blue-600 text-white p-3 rounded-2xl max-w-[85%] text-sm';
-            } else {
-                messageDiv.className = `self-start bg-slate-200 dark:bg-slate-800 p-3 rounded-2xl max-w-[85%] text-sm whitespace-pre-wrap ${isLoading ? 'opacity-60 animate-pulse' : ''}`;
-            }
-            
-            messageDiv.innerText = text;
-            chatContainer.appendChild(messageDiv);
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-            return id;
-        }
-
-        async function getGeminiResponse(prompt) {
-            const systemInstruction = "አንተ 'BTS Embassy Visa News and Consultant' የተባለ የጉዞ እና የቪዛ አማካሪ ድርጅት AI ረዳት ነህ። ለተጠቃሚዎች ስለ ኤምባሲ ቪዛዎች፣ የጉዞ መረጃዎች፣ በረራዎች እና ሆቴሎች በአማርኛ ቋንቋ ግልጽ፣ ቀጥተኛ እና አጋዥ የሆኑ መረጃዎችን መስጠት አለብህ።";
-
-            const response = await fetch(API_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    contents: [
-                        {
-                            role: "user",
-                            parts: [{ text: `${systemInstruction}\n\nየተጠቃሚው ጥያቄ፡ ${prompt}` }]
-                        }
-                    ]
-                })
-            });
-
-            const data = await response.json();
-            
-            if (data.candidates && data.candidates[0].content.parts[0].text) {
-                return data.candidates[0].content.parts[0].text;
-            } else {
-                throw new Error("Invalid API response format");
-            }
-        }
-    </script>
-</body>
-</html>
+<body>
+<header class="top"><h1>🌍 BTS Visa News</h1><p>Visa • Study • Work • Immigration • Travel</p></header>
+<main>
+  <div class="bar"><input id="search" placeholder="Search visa news..." /><button id="searchBtn">Search</button></div>
+  <div class="tabs" id="tabs">
+    <button class="active" data-cat="All">All</button><button data-cat="Study Visa">Study Visa</button>
+    <button data-cat="Work Visa">Work Visa</button><button data-cat="Immigration">Immigration</button>
+    <button data-cat="Travel">Travel</button>
+  </div>
+  <section id="news"><p>Loading news...</p></section>
+  <section class="card">
+    <h3>🤖 Ask BTS AI Assistant</h3>
+    <p class="notice">Ask general questions about visas, studying, working abroad or travel. Always confirm requirements with official authorities.</p>
+    <textarea id="question" rows="3" style="width:100%" placeholder="Type your question..."></textarea>
+    <button class="wide" id="askBtn">Ask AI</button><p id="answer"></p>
+  </section>
+  <section class="card">
+    <h3>🔒 Premium access</h3>
+    <p>Premium articles are locked. After paying through a method announced by BTS, submit your transaction reference for manual review.</p>
+    <select id="method" style="width:100%;margin:5px 0"><option value="Local bank">Local bank</option><option value="PayPal">PayPal</option></select>
+    <input id="reference" placeholder="Payment transaction/reference number" style="width:100%">
+    <button class="wide" id="paymentBtn">Submit payment request</button><p id="paymentStatus" class="notice"></p>
+  </section>
+  <p class="notice">BTS Visa News shares general information, not legal advice. Visa decisions are made by official authorities. Check the relevant embassy or immigration website before paying or applying.</p>
+</main><footer>© BTS Visa News</footer>
+<script>
+const tg = window.Telegram?.WebApp;
+tg?.ready(); tg?.expand();
+let category = "All";
+const headers = () => ({ "content-type":"application/json", "X-Telegram-Init-Data": tg?.initData || "" });
+async function loadNews(){
+  const q = encodeURIComponent(document.getElementById("search").value.trim());
+  const r = await fetch(`/api/news?q=${q}&category=${encodeURIComponent(category)}`);
+  const data = await r.json();
+  const root = document.getElementById("news");
+  if(!r.ok){root.textContent=data.error||"Could not load news.";return;}
+  root.innerHTML = "";
+  if(!data.news?.length){root.textContent="No news found.";return;}
+  data.news.forEach(n=>{
+    const el=document.createElement("article");el.className="card";
+    const meta=document.createElement("div");meta.className="meta";
+    meta.textContent=`${n.category} • ${new Date(n.date).toLocaleDateString()} • ${n.free?"FREE":"🔒 PREMIUM"}`;
+    const h=document.createElement("h3");h.textContent=n.title;
+    const p=document.createElement("p");p.textContent=n.summary;
+    const b=document.createElement("button");b.className="wide "+(!n.free?"secondary":"");
+    b.textContent=n.free?"Read full news":"Request premium access";
+    b.onclick=()=>n.free?readArticle(n.id):document.getElementById("reference").focus();
+    el.append(meta,h,p,b);root.append(el);
+  });
+}
+async function readArticle(id){
+  const r=await fetch(`/api/article?id=${encodeURIComponent(id)}`);const d=await r.json();
+  if(!r.ok){alert(d.error||"Unable to open article.");return;}
+  alert(d.article.title+"\n\n"+d.article.body);
+}
+document.getElementById("searchBtn").onclick=loadNews;
+document.getElementById("search").addEventListener("keydown",e=>{if(e.key==="Enter")loadNews()});
+document.querySelectorAll("#tabs button").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll("#tabs button").forEach(x=>x.classList.remove("active"));
+  b.classList.add("active");category=b.dataset.cat;loadNews();
+});
+document.getElementById("askBtn").onclick=async()=>{
+  const btn=document.getElementById("askBtn"),out=document.getElementById("answer");
+  btn.disabled=true;out.textContent="Thinking...";
+  try{const r=await fetch("/api/ask",{method:"POST",headers:headers(),body:JSON.stringify({question:document.getElementById("question").value})});
+    const d=await r.json();out.textContent=d.answer||d.error||"No response.";
+  }catch(e){out.textContent="Connection error. Please try again."}finally{btn.disabled=false}
+};
+document.getElementById("paymentBtn").onclick=async()=>{
+  const out=document.getElementById("paymentStatus");
+  try{const r=await fetch("/api/payment-request",{method:"POST",headers:headers(),body:JSON.stringify({
+    method:document.getElementById("method").value,reference:document.getElementById("reference").value
+  })});const d=await r.json();out.textContent=d.message||d.error||"Request failed.";
+  }catch(e){out.textContent="Connection error."}
+};
+loadNews();
+</script>
+</body></html>
