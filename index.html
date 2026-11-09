@@ -1,100 +1,26 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>BTS Visa News</title>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <style>
-    :root{font-family:Arial,sans-serif;color:#172033;background:#f4f6fa}
-    *{box-sizing:border-box}body{margin:0}.top{background:#102b55;color:white;padding:22px 18px 18px}
-    .top h1{margin:0 0 6px;font-size:23px}.top p{margin:0;color:#d7e4f8;font-size:13px}
-    main{max-width:760px;margin:auto;padding:15px}.bar{display:flex;gap:8px;margin:12px 0}
-    input,select,textarea,button{font:inherit;border-radius:10px;padding:12px;border:1px solid #d6dce7}
-    input{min-width:0;flex:1}button{background:#1557a6;color:white;border:0;font-weight:700}
-    .tabs{display:flex;gap:7px;overflow:auto;padding:4px 0 12px}.tabs button{white-space:nowrap;background:#e3eaf5;color:#17365f}
-    .tabs button.active{background:#1557a6;color:white}.card{background:white;border:1px solid #e5e9f0;border-radius:14px;padding:15px;margin:10px 0}
-    .meta{font-size:12px;color:#667085}.card h3{margin:8px 0;font-size:17px}.card p{color:#475467;line-height:1.45}
-    .tag{font-size:11px;background:#edf3fb;color:#244a7c;padding:5px 8px;border-radius:20px}
-    .wide{width:100%;margin-top:8px}.secondary{background:#e8eef7;color:#16365f}.hidden{display:none}
-    #answer{white-space:pre-wrap;line-height:1.5}.notice{font-size:12px;color:#667085;line-height:1.5}
-    footer{text-align:center;padding:25px;color:#667085;font-size:12px}
-  </style>
-</head>
-<body>
-<header class="top"><h1>🌍 BTS Visa News</h1><p>Visa • Study • Work • Immigration • Travel</p></header>
-<main>
-  <div class="bar"><input id="search" placeholder="Search visa news..." /><button id="searchBtn">Search</button></div>
-  <div class="tabs" id="tabs">
-    <button class="active" data-cat="All">All</button><button data-cat="Study Visa">Study Visa</button>
-    <button data-cat="Work Visa">Work Visa</button><button data-cat="Immigration">Immigration</button>
-    <button data-cat="Travel">Travel</button>
-  </div>
-  <section id="news"><p>Loading news...</p></section>
-  <section class="card">
-    <h3>🤖 Ask BTS AI Assistant</h3>
-    <p class="notice">Ask general questions about visas, studying, working abroad or travel. Always confirm requirements with official authorities.</p>
-    <textarea id="question" rows="3" style="width:100%" placeholder="Type your question..."></textarea>
-    <button class="wide" id="askBtn">Ask AI</button><p id="answer"></p>
-  </section>
-  <section class="card">
-    <h3>🔒 Premium access</h3>
-    <p>Premium articles are locked. After paying through a method announced by BTS, submit your transaction reference for manual review.</p>
-    <select id="method" style="width:100%;margin:5px 0"><option value="Local bank">Local bank</option><option value="PayPal">PayPal</option></select>
-    <input id="reference" placeholder="Payment transaction/reference number" style="width:100%">
-    <button class="wide" id="paymentBtn">Submit payment request</button><p id="paymentStatus" class="notice"></p>
-  </section>
-  <p class="notice">BTS Visa News shares general information, not legal advice. Visa decisions are made by official authorities. Check the relevant embassy or immigration website before paying or applying.</p>
-</main><footer>© BTS Visa News</footer>
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BTS Visa News AI</title><script src="https://telegram.org/js/telegram-web-app.js"></script><style>
+body{margin:0;background:#f3f6fb;color:#172033;font:16px Arial}header{background:#102b55;color:white;padding:22px}main{max-width:760px;margin:auto;padding:14px}.card{background:white;border:1px solid #ddd;border-radius:14px;padding:15px;margin:12px 0}input,textarea,select,button{font:inherit;padding:12px;border-radius:9px;border:1px solid #ccd}input,textarea{width:100%;box-sizing:border-box;margin:5px 0}button{background:#1557a6;color:white;border:0;font-weight:bold;cursor:pointer}.full{width:100%;margin-top:8px}.muted{font-size:12px;color:#667085;line-height:1.5}.output{white-space:pre-wrap;line-height:1.55}a{color:#1557a6;overflow-wrap:anywhere}
+</style></head><body><header><h2>🌍 BTS Visa News</h2>Visa • Study • Work • Immigration • Travel</header><main>
+<section class="card"><h3>Google Gemini API Key</h3><p class="muted">Paste your key below. Anyone who can inspect this public app may be able to copy it. Use a restricted key and monitor usage.</p><input id="key" type="password" placeholder="Paste Google AI Studio API key"><button id="useKey">Use key</button> <button id="clearKey">Clear</button><p id="keyStatus" class="muted">No key entered.</p></section>
+<section class="card"><h3>📰 Generate visa news</h3><select id="category"><option>All visa news</option><option>Study visa</option><option>Work visa</option><option>Immigration</option><option>Embassy updates</option><option>Travel</option></select><select id="count"><option>5</option><option>8</option><option>10</option></select><button class="full" id="newsBtn">Find and generate news</button><p id="newsStatus" class="muted"></p><div id="news" class="output"></div></section>
+<section class="card"><h3>🔎 Search visa information</h3><input id="query" placeholder="e.g. Canada study permit update"><button class="full" id="searchBtn">Search</button><p id="searchStatus" class="muted"></p><div id="search" class="output"></div></section>
+<section class="card"><h3>🤖 Ask BTS AI Assistant</h3><textarea id="question" rows="3" placeholder="Ask about visas, study, work or travel..."></textarea><button class="full" id="askBtn">Send question</button><p id="askStatus" class="muted"></p><div id="answer" class="output"></div></section>
+<p class="muted">AI-generated information can be wrong. Verify visa rules, dates, fees and requirements with official government or embassy sources. This app generates drafts; it does not automatically publish to Telegram.</p></main>
 <script>
-const tg = window.Telegram?.WebApp;
-tg?.ready(); tg?.expand();
-let category = "All";
-const headers = () => ({ "content-type":"application/json", "X-Telegram-Init-Data": tg?.initData || "" });
-async function loadNews(){
-  const q = encodeURIComponent(document.getElementById("search").value.trim());
-  const r = await fetch(`/api/news?q=${q}&category=${encodeURIComponent(category)}`);
-  const data = await r.json();
-  const root = document.getElementById("news");
-  if(!r.ok){root.textContent=data.error||"Could not load news.";return;}
-  root.innerHTML = "";
-  if(!data.news?.length){root.textContent="No news found.";return;}
-  data.news.forEach(n=>{
-    const el=document.createElement("article");el.className="card";
-    const meta=document.createElement("div");meta.className="meta";
-    meta.textContent=`${n.category} • ${new Date(n.date).toLocaleDateString()} • ${n.free?"FREE":"🔒 PREMIUM"}`;
-    const h=document.createElement("h3");h.textContent=n.title;
-    const p=document.createElement("p");p.textContent=n.summary;
-    const b=document.createElement("button");b.className="wide "+(!n.free?"secondary":"");
-    b.textContent=n.free?"Read full news":"Request premium access";
-    b.onclick=()=>n.free?readArticle(n.id):document.getElementById("reference").focus();
-    el.append(meta,h,p,b);root.append(el);
-  });
+const tg=window.Telegram?.WebApp;tg?.ready();tg?.expand();let apiKey="";
+document.getElementById("useKey").onclick=()=>{apiKey=document.getElementById("key").value.trim();document.getElementById("keyStatus").textContent=apiKey?"Key entered for this session.":"Paste your key first.";};
+document.getElementById("clearKey").onclick=()=>{apiKey="";document.getElementById("key").value="";document.getElementById("keyStatus").textContent="Key cleared.";};
+async function gemini(prompt){
+ if(!apiKey)throw Error("Paste your Google AI Studio key above and tap Use key.");
+ const u="https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key="+encodeURIComponent(apiKey);
+ const r=await fetch(u,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({contents:[{parts:[{text:prompt}]}],tools:[{google_search:{}}]})});
+ const d=await r.json();if(!r.ok)throw Error(d.error?.message||"Gemini API request failed.");
+ const c=d.candidates?.[0];const text=c?.content?.parts?.map(p=>p.text||"").join("\n")||"No answer returned.";
+ return {text,links:(c?.groundingMetadata?.groundingChunks||[]).map(x=>x.web).filter(x=>x?.uri)};
 }
-async function readArticle(id){
-  const r=await fetch(`/api/article?id=${encodeURIComponent(id)}`);const d=await r.json();
-  if(!r.ok){alert(d.error||"Unable to open article.");return;}
-  alert(d.article.title+"\n\n"+d.article.body);
-}
-document.getElementById("searchBtn").onclick=loadNews;
-document.getElementById("search").addEventListener("keydown",e=>{if(e.key==="Enter")loadNews()});
-document.querySelectorAll("#tabs button").forEach(b=>b.onclick=()=>{
-  document.querySelectorAll("#tabs button").forEach(x=>x.classList.remove("active"));
-  b.classList.add("active");category=b.dataset.cat;loadNews();
-});
-document.getElementById("askBtn").onclick=async()=>{
-  const btn=document.getElementById("askBtn"),out=document.getElementById("answer");
-  btn.disabled=true;out.textContent="Thinking...";
-  try{const r=await fetch("/api/ask",{method:"POST",headers:headers(),body:JSON.stringify({question:document.getElementById("question").value})});
-    const d=await r.json();out.textContent=d.answer||d.error||"No response.";
-  }catch(e){out.textContent="Connection error. Please try again."}finally{btn.disabled=false}
-};
-document.getElementById("paymentBtn").onclick=async()=>{
-  const out=document.getElementById("paymentStatus");
-  try{const r=await fetch("/api/payment-request",{method:"POST",headers:headers(),body:JSON.stringify({
-    method:document.getElementById("method").value,reference:document.getElementById("reference").value
-  })});const d=await r.json();out.textContent=d.message||d.error||"Request failed.";
-  }catch(e){out.textContent="Connection error."}
-};
-loadNews();
-</script>
-</body></html>
+function display(el,res){el.textContent=res.text;if(res.links.length){let h=document.createElement("p");h.textContent="Sources:";el.append(h);res.links.forEach(s=>{let a=document.createElement("a");a.href=s.uri;a.target="_blank";a.rel="noopener";a.textContent=s.title||s.uri;let p=document.createElement("p");p.append(a);el.append(p);});}}
+async function run(btnId,statusId,outId,prompt){let b=document.getElementById(btnId),s=document.getElementById(statusId),o=document.getElementById(outId);b.disabled=true;o.textContent="";s.textContent="Working...";try{display(o,await gemini(prompt));s.textContent="Done. Check the source links and verify official details.";}catch(e){s.textContent=e.message;}finally{b.disabled=false;}}
+document.getElementById("newsBtn").onclick=()=>run("newsBtn","newsStatus","news",`Use Google Search to find ${document.getElementById("count").value} recent, verifiable ${document.getElementById("category").value} updates relevant to people planning to study, work, immigrate or travel abroad, including Ethiopia where relevant. Prioritize official government, embassy and immigration sources. Do not invent changes, dates, fees or deadlines. For each item provide headline, country, date, concise summary, who is affected, practical next step and source URL. Distinguish official announcements from media reports. If you cannot verify an update, say so. Format as news drafts for an editor.`);
+document.getElementById("searchBtn").onclick=()=>{let q=document.getElementById("query").value.trim();if(!q){document.getElementById("searchStatus").textContent="Enter a search phrase.";return;}run("searchBtn","searchStatus","search",`Search for current reliable information about ${q}. Prefer official government and embassy sources. Summarize confirmed facts, dates and caveats. Do not guess.`);};
+document.getElementById("askBtn").onclick=()=>{let q=document.getElementById("question").value.trim();if(!q){document.getElementById("askStatus").textContent="Write a question first.";return;}run("askBtn","askStatus","answer",`You are BTS Visa News information assistant. Answer clearly and carefully. Use current web sources for current visa rules. Never guarantee approval or invent requirements, fees or deadlines. Encourage checking official authorities. User asks: ${q}`);};
+</script></body></html>
